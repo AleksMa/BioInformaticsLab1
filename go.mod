@@ -1,5 +1,5 @@
-module github.com/AleksMa/BioInformatics/Lab1
+module github.com/AleksMa/BioInformaticsLab1
 
 go 1.14
 
-require github.com/stretchr/testify v1.6.1 // indirect
+require github.com/stretchr/testify v1.6.1

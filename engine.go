@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-const GapSymbol = '-'
+const GapSymbol = "-"
 
 type NeedlemanWunsch struct {
 	TopSequence  *Sequence
@@ -45,6 +45,7 @@ func NewNeedlemanWunsch(first, second *Sequence, sf ScoringFunc, GapValue int) *
 	return nw
 }
 
+// Функция вывода таблицы для отладки
 func (nw *NeedlemanWunsch) Print() {
 	for i := 0; i <= len(nw.LeftSequence.Value); i++ {
 		for j := 0; j <= len(nw.TopSequence.Value); j++ {
@@ -56,14 +57,16 @@ func (nw *NeedlemanWunsch) Print() {
 }
 
 func (nw *NeedlemanWunsch) Solve() (string, string, int) {
+	// Рекурсивно определяем значения матрицы, одновременно определяя и направления
 	nw.determine(len(nw.LeftSequence.Value), len(nw.TopSequence.Value))
 
 	cell := nw.Table[len(nw.LeftSequence.Value)][len(nw.TopSequence.Value)]
 
 	score := cell.Distance
 	firstRes, secondRes := "", ""
-	fp, sp := len(nw.LeftSequence.Value)-1, len(nw.TopSequence.Value)-1
 
+	// Двигаемся от правой нижней ячейки матрицы к левой верхней, и строим с конца строки-выравнивания
+	fp, sp := len(nw.LeftSequence.Value)-1, len(nw.TopSequence.Value)-1
 	for cell.Dir != NullDirection {
 		if cell.Dir == DiagonalDirection {
 			firstRes = string(rune(nw.LeftSequence.Value[fp])) + firstRes
@@ -72,10 +75,10 @@ func (nw *NeedlemanWunsch) Solve() (string, string, int) {
 			fp--
 		} else if cell.Dir == TopDirection {
 			firstRes = string(rune(nw.LeftSequence.Value[fp])) + firstRes
-			secondRes = "-" + secondRes
+			secondRes = GapSymbol + secondRes
 			fp--
 		} else if cell.Dir == LeftDirection {
-			firstRes = "-" + firstRes
+			firstRes = GapSymbol + firstRes
 			secondRes = string(rune(nw.TopSequence.Value[sp])) + secondRes
 			sp--
 		}
@@ -85,6 +88,7 @@ func (nw *NeedlemanWunsch) Solve() (string, string, int) {
 	return firstRes, secondRes, score
 }
 
+// Рекурсивное заполнение матрицы
 func (nw *NeedlemanWunsch) determine(i, j int) {
 	if nw.Table[i][j] != nil {
 		return
@@ -124,6 +128,7 @@ func (nw *NeedlemanWunsch) determine(i, j int) {
 	}
 }
 
+// Достаточно примитивная функция выбора максимума из трех с указанием номера максимального
 func max3(a, b, c int) (int, int) {
 	if a >= b {
 		if a >= c {

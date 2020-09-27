@@ -7,7 +7,7 @@ type Sequence struct {
 	Value       string
 }
 
-type Letter rune
+// Перечисление возможных "направлений движения" в матрице метода Нидлмана-Вунша
 type Direction int
 
 const (
